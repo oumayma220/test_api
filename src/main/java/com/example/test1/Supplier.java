@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Data
@@ -14,15 +16,9 @@ public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String apiUrl;
-    private String productIdPath;
-    private String productNamePath;
-    private String productDescPath;
-    private String productUrlPath;
-    private String productPricePath;
 
-    private boolean supportsPagination;
-    private String pageParamName;
-    private String sizeParamName;
+    private String name;
+
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
+    private List<ApiConfiguration> apiConfigurations;
 }

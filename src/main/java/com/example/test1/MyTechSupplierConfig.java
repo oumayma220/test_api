@@ -8,20 +8,27 @@ import org.springframework.context.annotation.Configuration;
 public class MyTechSupplierConfig {
 
     @Bean
-    public CommandLineRunner initMyTechSupplier(SupplierRepository supplierRepository) {
+    public CommandLineRunner initSuppliers(SupplierRepository supplierRepository,
+                                           ApiConfigurationRepository apiConfigRepo) {
         return args -> {
-            if (supplierRepository.findByName("My-Tech").isEmpty()) {
-                Supplier myTech = new Supplier();
-                myTech.setName("My-Tech");
-                myTech.setApiUrl("http://51.77.116.35:8080/my-tech/products");
-                myTech.setProductIdPath("$[*].id");
-                myTech.setProductNamePath("$[*].product_name");
-                myTech.setProductDescPath("$[*].short_summary");
-                myTech.setProductUrlPath("$[*].product_url");
-                myTech.setProductPricePath("$[*].retail_price");
-                myTech.setSupportsPagination(false);
+            Supplier myTech = supplierRepository.findByName("My-Tech")
+                    .orElseGet(() -> {
+                        Supplier s = new Supplier();
+                        s.setName("My-Tech");
+                        return supplierRepository.save(s);
+                    });
 
-                supplierRepository.save(myTech);
+            if (!apiConfigRepo.findBySupplier_NameAndApiType("My-Tech", "REST").isPresent()) {
+                ApiConfiguration restConfig = new ApiConfiguration();
+                restConfig.setApiType("REST");
+                restConfig.setApiUrl("http://51.77.116.35:8080/my-tech/products");
+                // Exemple de mapping JSONPath, adaptez-les à la structure réelle de la réponse
+                restConfig.setProductNamePath("$[*].product_name");
+                restConfig.setProductDescPath("$[*].short_summary");
+                restConfig.setProductUrlPath("$[*].product_url");
+                restConfig.setProductPricePath("$[*].retail_price");
+                restConfig.setSupplier(myTech);
+                apiConfigRepo.save(restConfig);
             }
         };
     }

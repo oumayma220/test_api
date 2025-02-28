@@ -5,7 +5,7 @@ spring:
     name: test
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/test
+    url: jdbc:postgresql://localhost:5432/test-api
     username: postgres
     password: user123
   jpa:

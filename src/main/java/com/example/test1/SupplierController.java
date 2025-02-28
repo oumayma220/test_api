@@ -9,41 +9,27 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/suppliers")
 public class SupplierController {
-
     @Autowired
     private SupplierRepository supplierRepository;
 
-
 @Autowired
 private ProductService productService;
-@Autowired
-    public void setTunisiaNetProductService(ProductService productService) {
-        this.productService = productService;
+    @GetMapping("/rest")
+    public List<Product> getProductsFromRest() {
+        return productService.fetchProductsFromMyTech();
     }
-
-
-
-    @GetMapping("/tunisanet")
-    public ResponseEntity<List<Product>> getAllProductstunisanet() {
-        List<Product> products = productService.fetchAllProductsFromTunisianet();
-        return ResponseEntity.ok(products);
+    @GetMapping("/tunisianet")
+    public List<Product> getProductsFromResttunianet() {
+        return productService.fetchProductsFromTunisianet();
     }
     @GetMapping("/fakeproduct")
-    public ResponseEntity<List<Product>> getAllProductsFake() {
-        List<Product> products = productService.fetchAllProductsFromFakeProduct();
-        return ResponseEntity.ok(products);
-    }
-    @GetMapping("/mytech")
-    public ResponseEntity<List<Product>> getAllProductsMyTech() {
-        List<Product> products = productService.fetchProductsFromMyTech();
-        return ResponseEntity.ok(products);
+    public List<Product> getProductsFromRestFakeProduct() {
+        return productService.fetchProductsFromFakeProduct();
     }
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.fetchAllProducts();
-        return ResponseEntity.ok(products);
+    public List<Product> getallProducts() {
+        return productService.fetchAllProducts();
     }
-
 
 
 }
